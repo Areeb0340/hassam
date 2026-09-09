@@ -1,1785 +1,981 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mohammad Hassam — Video Editor & Motion Designer</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Caveat:wght@600&display=swap"
-        rel="stylesheet">
-    <style>
-        :root {
-            --clay: #C38564;
-            --brown-mid: #6F4A32;
-            --brown-dark: #4C4039;
-            --charcoal: #3E3935;
-            --bg: #211B17;
-            --bg-soft: #2A231F;
-            --ink: #F3ECE4;
-            --ink-dim: #B9AA9E;
-            --line: rgba(243, 236, 228, 0.12);
-            --radius: 2px;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: auto;
-        }
-
-        body {
-            background: var(--bg);
-            color: var(--ink);
-            font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        ::selection {
-            background: var(--clay);
-            color: var(--bg);
-        }
-
-        h1,
-        h2,
-        h3,
-        .display {
-            font-family: 'Instrument Sans', sans-serif;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            line-height: 0.95;
-        }
-
-        a {
-            color: inherit;
-            text-decoration: none;
-        }
-
-        img {
-            display: block;
-            max-width: 100%;
-        }
-
-        .wrap {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 32px;
-        }
-
-        .eyebrow {
-            font-size: 12px;
-            letter-spacing: 0.06em;
-            color: var(--ink-dim);
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 13px 26px;
-            border: 1px solid var(--clay);
-            border-radius: 999px;
-            font-size: 13px;
-            font-weight: 600;
-            letter-spacing: 0.02em;
-            color: var(--ink);
-            background: transparent;
-            cursor: pointer;
-            transition: background .35s ease, color .35s ease, transform .3s ease;
-            white-space: nowrap;
-        }
-
-        .btn:hover {
-            background: var(--clay);
-            color: #231A13;
-            transform: translateY(-2px);
-        }
-
-        .btn .dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: var(--clay);
-            transition: background .35s ease;
-        }
-
-        .btn:hover .dot {
-            background: #231A13;
-        }
-
-        /* ---------------- NAV ---------------- */
-        header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 200;
-            background: rgba(33, 27, 23, 0.78);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--line);
-        }
-
-        .nav-top {
-            padding: 16px;
-            display: grid;
-            grid-template-columns: 1fr auto 1fr;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .nav-logo-wrap {
-            justify-self: center;
-            display: flex;
-            align-items: center;
-        }
-
-        .nav-logo {
-            height: 80px;
-            width: auto;
-            object-fit: contain;
-            display: block;
-        }
-
-        .nav-logo-fallback {
-            display: none;
-            font-family: 'Instrument Sans';
-            font-weight: 700;
-            font-size: 15px;
-            letter-spacing: 0.04em;
-            color: var(--ink);
-            text-transform: uppercase;
-            white-space: nowrap;
-        }
-
-        .nav-left {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 12px;
-            color: var(--ink-dim);
-            letter-spacing: 0.04em;
-        }
-
-        .nav-left .pulse {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: var(--clay);
-            animation: pulse 1.8s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-
-            0%,
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-
-            50% {
-                opacity: .4;
-                transform: scale(0.7);
-            }
-        }
-
-        .nav-right {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-            justify-self: end;
-        }
-
-        /* sliding services ticker, attached under the top nav row */
-        .services-ticker {
-            overflow: hidden;
-            border-top: 1px solid var(--line);
-            padding: 13px 0;
-            background: rgba(0, 0, 0, 0.18);
-        }
-
-        .services-ticker .track {
-            display: flex;
-            width: max-content;
-            animation: tickerScroll 28s linear infinite;
-        }
-
-        .services-ticker .group {
-            display: flex;
-            align-items: center;
-            flex-shrink: 0;
-        }
-
-        .services-ticker .item {
-            font-size: 17px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.03em;
-            color: var(--ink-dim);
-            padding: 0 26px;
-            white-space: nowrap;
-        }
-
-        .services-ticker .item .accent {
-            color: var(--clay);
-        }
-
-        .services-ticker .sep {
-            color: var(--clay);
-            opacity: .7;
-            font-size: 18px;
-            line-height: 0;
-            position: relative;
-            top: -1px;
-        }
-
-        @keyframes tickerScroll {
-            from {
-                transform: translateX(0);
-            }
-
-            to {
-                transform: translateX(-50%);
-            }
-        }
-
-        @media(max-width:700px) {
-            .services-ticker .item {
-                font-size: 14px;
-                padding: 0 18px;
-            }
-        }
-
-        /* ---------------- HERO ---------------- */
-        .hero {
-            position: relative;
-            padding: 240px 0 60px;
-            text-align: center;
-        }
-
-        .avail {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 7px 16px;
-            border: 1px solid var(--line);
-            border-radius: 999px;
-            font-size: 11px;
-            letter-spacing: 0.08em;
-            color: var(--ink-dim);
-            margin-bottom: 36px;
-        }
-
-        .avail .pulse {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: #7EDB8F;
-            animation: pulse 1.8s ease-in-out infinite;
-        }
-
-        .hero-name {
-            font-size: clamp(52px, 10vw, 148px);
-            text-transform: uppercase;
-            color: var(--ink);
-        }
-
-        .hero-name .line {
-            overflow: hidden;
-        }
-
-        .hero-name .line span {
-            display: block;
-            transform: translateY(105%);
-            animation: riseUp .9s cubic-bezier(.2, .9, .25, 1) forwards;
-        }
-
-        .hero-name .line:nth-child(2) span {
-            animation-delay: .12s;
-            color: var(--clay);
-            -webkit-text-stroke: 2px var(--clay);
-        }
-
-        @keyframes riseUp {
-            to {
-                transform: translateY(0);
-            }
-        }
-
-        .tool-strip {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 14px;
-            max-width: 1000px;
-            margin: 50px auto 0;
-            padding: 0 32px;
-        }
-
-        .tool-chip {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 18px 10px 10px;
-            border: 1px solid var(--line);
-            border-radius: 999px;
-            background: rgba(243, 236, 228, 0.02);
-        }
-
-        .tool-chip .badge {
-            width: 30px;
-            height: 30px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Instrument Sans';
-            font-weight: 700;
-            font-size: 12px;
-            color: #fff;
-            flex-shrink: 0;
-        }
-
-        .tool-chip span.label {
-            font-size: 12px;
-            letter-spacing: 0.03em;
-            color: var(--ink-dim);
-            white-space: nowrap;
-        }
-
-        .badge.pr {
-            background: #00005B;
-        }
-
-        .badge.ae {
-            background: #00005B;
-        }
-
-        .badge.ai {
-            background: #330000;
-        }
-
-        .badge.ps {
-            background: #001E36;
-        }
-
-        .badge.c4 {
-            background: #141414;
-        }
-
-        .badge.fig {
-            background: #1E1E1E;
-        }
-
-        /* ---------------- STUDIO PACKAGES (replaces old hero photo block) ---------------- */
-        .packages {
-            width: 100vw;
-            margin: 90px calc(50% - 50vw) 0;
-            padding: 110px 32px;
-            background: linear-gradient(180deg, #241D19 0%, #17110E 100%);
-            border-top: 1px solid var(--line);
-            border-bottom: 1px solid var(--line);
-        }
-
-        .packages-head {
-            max-width: 1200px;
-            margin: 0 auto 60px;
-            text-align: center;
-        }
-
-        .packages-head .sec-title {
-            margin-bottom: 16px;
-        }
-
-        .packages-head p {
-            color: var(--ink-dim);
-            font-size: 16px;
-            max-width: 520px;
-            margin: 0 auto;
-        }
-
-        .package-grid {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2px;
-            background: var(--line);
-            border: 1px solid var(--line);
-        }
-
-        .package-card {
-            background: var(--bg);
-            padding: 46px 34px;
-            display: flex;
-            flex-direction: column;
-            transition: background .35s ease, transform .35s ease;
-            position: relative;
-        }
-
-        .package-card:hover {
-            background: var(--bg-soft);
-            transform: translateY(-6px);
-        }
-
-        .package-card.featured {
-            background: var(--bg-soft);
-        }
-
-        .package-card .tag {
-            align-self: flex-start;
-            font-size: 10px;
-            letter-spacing: 0.08em;
-            color: var(--clay);
-            border: 1px solid var(--clay);
-            border-radius: 999px;
-            padding: 5px 12px;
-            margin-bottom: 22px;
-            text-transform: uppercase;
-        }
-
-        .package-card h3 {
-            font-size: 26px;
-            text-transform: uppercase;
-            margin-bottom: 12px;
-        }
-
-        .package-card .desc {
-            font-size: 14px;
-            color: var(--ink-dim);
-            line-height: 1.7;
-            margin-bottom: 28px;
-        }
-
-        .package-card ul {
-            list-style: none;
-            margin-bottom: 36px;
-            flex-grow: 1;
-        }
-
-        .package-card li {
-            font-size: 14px;
-            color: var(--ink-dim);
-            padding: 12px 0;
-            border-top: 1px solid var(--line);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .package-card li:last-child {
-            border-bottom: 1px solid var(--line);
-        }
-
-        .package-card li::before {
-            content: "";
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
-            background: var(--clay);
-            flex-shrink: 0;
-        }
-
-        .package-card .btn {
-            width: 100%;
-            justify-content: center;
-        }
-
-        @media(max-width:860px) {
-            .package-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* ---------------- SECTION HEADS ---------------- */
-        section {
-            padding: 130px 0;
-            position: relative;
-        }
-
-        .sec-head {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            margin-bottom: 60px;
-            gap: 40px;
-            flex-wrap: wrap;
-        }
-
-        .sec-title {
-            font-size: clamp(38px, 5.5vw, 64px);
-            text-transform: uppercase;
-        }
-
-        .sec-title em {
-            font-style: normal;
-            color: var(--clay);
-            -webkit-text-stroke: 1.4px var(--clay);
-        }
-
-        .sec-sub {
-            max-width: 400px;
-            font-size: 15px;
-            color: var(--ink-dim);
-            line-height: 1.65;
-        }
-
-        /* ---------------- WORK GRID ---------------- */
-        .work-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2px;
-            background: var(--line);
-            border: 1px solid var(--line);
-        }
-
-        .work-card {
-            position: relative;
-            background: var(--bg);
-            aspect-ratio: 16/11;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 26px;
-            cursor: pointer;
-        }
-
-        .work-thumb {
-            position: absolute;
-            inset: 0;
-            z-index: 0;
-            transition: transform .7s cubic-bezier(.2, .9, .25, 1), filter .5s ease;
-            filter: saturate(.85);
-        }
-
-        .work-card:hover .work-thumb {
-            transform: scale(1.06);
-            filter: saturate(1.05);
-        }
-
-        .work-thumb::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(0deg, rgba(23, 17, 14, .78) 0%, rgba(23, 17, 14, .15) 45%, rgba(23, 17, 14, .55) 100%);
-        }
-
-        .thumb-icon {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: .55;
-        }
-
-        .thumb-icon svg {
-            width: 56px;
-            height: 56px;
-            stroke: var(--ink);
-        }
-
-        .work-top {
-            position: relative;
-            z-index: 1;
-            display: flex;
-            justify-content: space-between;
-            font-size: 11px;
-            letter-spacing: 0.06em;
-            color: var(--ink-dim);
-        }
-
-        .work-bottom {
-            position: relative;
-            z-index: 1;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-        }
-
-        .work-bottom h3 {
-            font-size: 22px;
-            text-transform: uppercase;
-            color: var(--ink);
-        }
-
-        .work-bottom .cat {
-            font-size: 11px;
-            color: var(--ink-dim);
-            margin-top: 6px;
-            letter-spacing: 0.04em;
-        }
-
-        .work-bottom .yr {
-            font-size: 12px;
-            color: var(--ink-dim);
-        }
-
-        .play {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            border: 1px solid var(--clay);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .play svg {
-            width: 14px;
-            height: 14px;
-            fill: var(--clay);
-        }
-
-        /* different gradient tints per card via nth-child */
-        .work-card:nth-child(1) .work-thumb {
-            background: linear-gradient(140deg, #6F4A32, #2A231F 70%);
-        }
-
-        .work-card:nth-child(2) .work-thumb {
-            background: linear-gradient(140deg, #C38564, #3E3935 70%);
-        }
-
-        .work-card:nth-child(3) .work-thumb {
-            background: linear-gradient(140deg, #4C4039, #17110E 70%);
-        }
-
-        .work-card:nth-child(4) .work-thumb {
-            background: linear-gradient(140deg, #8a5a3d, #2A231F 70%);
-        }
-
-        .work-card:nth-child(5) .work-thumb {
-            background: linear-gradient(140deg, #3E3935, #6F4A32 70%);
-        }
-
-        .work-card:nth-child(6) .work-thumb {
-            background: linear-gradient(140deg, #C38564, #4C4039 70%);
-        }
-
-        .work-card:nth-child(7) .work-thumb {
-            background: linear-gradient(140deg, #6F4A32, #17110E 70%);
-        }
-
-        .work-card:nth-child(8) .work-thumb {
-            background: linear-gradient(140deg, #4C4039, #C38564 75%);
-        }
-
-        /* ---------------- ABOUT ---------------- */
-        .about {
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .about-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--clay);
-            margin-bottom: 34px;
-        }
-
-        .about-pin {
-            position: relative;
-            width: 100%;
-            height: 920px;
-            display: flex;
-            justify-content: center;
-        }
-
-        .about-heading {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            font-size: clamp(34px, 6.4vw, 68px);
-            text-transform: uppercase;
-            z-index: 1;
-            will-change: opacity, transform;
-        }
-
-        .about-photo {
-            position: absolute;
-            top: 180px;
-            width: 580px;
-            height: 720px;
-            border-radius: 50%;
-            background-image:
-                linear-gradient(0deg, rgba(23, 17, 14, .12), rgba(23, 17, 14, 0)),
-                url("h.jpeg");
-            background-size: cover;
-            background-position: center top;
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-            border: 1px solid var(--line);
-            filter: grayscale(0.2);
-            z-index: 2;
-            will-change: transform;
-        }
-
-        .about-photo .ring {
-            margin-bottom: 24px;
-            background: rgba(23, 17, 14, 0.6);
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            border: 1px dashed var(--clay);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Instrument Sans';
-            font-weight: 700;
-            font-size: 14px;
-            color: var(--clay);
-        }
-
-        .about-copy {
-            margin-top: 26px;
-        }
-
-        .about-copy p {
-            font-size: 22px;
-            line-height: 1.85;
-            color: var(--ink-dim);
-            margin-bottom: 22px;
-            max-width: 780px;
-        }
-
-        .about-cols {
-            display: flex;
-            gap: 60px;
-            max-width: 820px;
-            margin: 26px 0 8px;
-            text-align: left;
-        }
-
-        .about-cols p {
-            margin: 0;
-            font-size: 19px;
-            line-height: 1.8;
-        }
-
-        .about .btn {
-            margin-top: 26px;
-        }
-
-        /* ---------------- EXPERTISE ---------------- */
-        .expertise-list {
-            border-top: 1px solid var(--line);
-        }
-
-        .expertise-item {
-            display: grid;
-            grid-template-columns: 70px 1fr 1.3fr;
-            gap: 32px;
-            padding: 34px 0;
-            border-bottom: 1px solid var(--line);
-            align-items: start;
-        }
-
-        .expertise-item .num {
-            font-size: 13px;
-            color: var(--clay);
-            font-family: 'Instrument Sans';
-        }
-
-        .expertise-item h3 {
-            font-size: 24px;
-            text-transform: uppercase;
-            letter-spacing: -0.01em;
-        }
-
-        .expertise-item p {
-            font-size: 19px;
-            color: var(--ink-dim);
-            line-height: 1.8;
-            max-width: 560px;
-        }
-
-        /* ---------------- DRIVES ---------------- */
-        .drives {
-            display: grid;
-            grid-template-columns: 0.9fr 1.1fr;
-            gap: 80px;
-        }
-
-        .drives h2 {
-            font-size: clamp(30px, 4vw, 46px);
-            text-transform: uppercase;
-        }
-
-        .drives .copy p {
-            font-size: 20px;
-            line-height: 1.9;
-            color: var(--ink-dim);
-            margin-bottom: 24px;
-            max-width: 600px;
-        }
-
-        .signature {
-            font-family: 'Caveat', cursive;
-            font-size: 44px;
-            color: var(--clay);
-            margin-top: 26px;
-        }
-
-        /* ---------------- TOOLS ---------------- */
-        .tool-row {
-            display: grid;
-            grid-template-columns: 64px 1fr 1.4fr;
-            gap: 28px;
-            align-items: center;
-            padding: 28px 24px;
-            border: 1px solid var(--line);
-            margin-bottom: -1px;
-            transition: background .3s ease;
-        }
-
-        .tool-row:hover {
-            background: rgba(195, 133, 100, 0.05);
-        }
-
-        .tool-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: var(--bg-soft);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            color: var(--clay);
-            border: 1px solid var(--line);
-        }
-
-        .tool-row h4 {
-            font-size: 18px;
-            text-transform: uppercase;
-            margin-bottom: 4px;
-        }
-
-        .tool-row .tag {
-            font-size: 11px;
-            color: var(--clay);
-            letter-spacing: 0.06em;
-            margin-bottom: 6px;
-            display: block;
-        }
-
-        .tool-row p {
-            font-size: 18px;
-            color: var(--ink-dim);
-            line-height: 1.75;
-        }
-
-        /* ---------------- FAQ ---------------- */
-        .faq-item {
-            border-bottom: 1px solid var(--line);
-        }
-
-        .faq-q {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 26px 4px;
-            cursor: pointer;
-            font-size: 17px;
-        }
-
-        .faq-q .plus {
-            font-size: 20px;
-            color: var(--clay);
-            transition: transform .35s ease;
-            flex-shrink: 0;
-            margin-left: 20px;
-        }
-
-        .faq-item.open .plus {
-            transform: rotate(45deg);
-        }
-
-        .faq-a {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height .4s ease;
-        }
-
-        .faq-item.open .faq-a {
-            max-height: 280px;
-        }
-
-        .faq-a p {
-            padding: 0 4px 26px;
-            font-size: 19px;
-            color: var(--ink-dim);
-            line-height: 1.8;
-            max-width: 720px;
-        }
-
-        /* ---------------- FINAL CTA ---------------- */
-        .final {
-            text-align: center;
-            padding-bottom: 60px;
-        }
-
-        .final-pin {
-            position: relative;
-            width: 100%;
-            height: 940px;
-            display: flex;
-            justify-content: center;
-        }
-
-        .final-heading {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1;
-            will-change: opacity, transform;
-        }
-
-        .final-heading .sec-title {
-            margin-bottom: 30px;
-        }
-
-        .final-photo {
-            position: absolute;
-            top: 200px;
-            width: 580px;
-            height: 720px;
-            border-radius: 50%;
-            background-image: url("h.jpeg");
-            background-size: cover;
-            background-position: center top;
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-            border: 1px solid var(--line);
-            color: var(--clay);
-            font-family: 'Instrument Sans';
-            font-size: 18px;
-            z-index: 2;
-            will-change: transform;
-            filter: grayscale(0.2);
-        }
-
-        .final-photo span {
-            background: rgba(23, 17, 14, 0.6);
-            border-radius: 50%;
-            width: 34px;
-            height: 34px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 26px;
-            font-size: 12px;
-            font-weight: 700;
-            border: 1px dashed var(--clay);
-            color: var(--clay);
-        }
-
-        .final-copy {
-            margin-top: 20px;
-        }
-
-        .final p.bio {
-            max-width: 640px;
-            margin: 0 auto;
-            color: var(--ink-dim);
-            font-size: 19px;
-            line-height: 1.8;
-        }
-
-        .socials {
-            display: flex;
-            gap: 26px;
-            justify-content: center;
-            margin-top: 26px;
-            font-size: 13px;
-            color: var(--ink-dim);
-        }
-
-        .socials a:hover {
-            color: var(--clay);
-        }
-
-        /* ---------------- FOOTER ---------------- */
-        footer {
-            border-top: 1px solid var(--line);
-            padding: 70px 0 30px;
-            overflow: hidden;
-        }
-
-        .foot-marquee {
-            display: flex;
-            white-space: nowrap;
-            animation: scroll 22s linear infinite;
-        }
-
-        .foot-marquee span {
-            font-family: 'Instrument Sans';
-            font-weight: 800;
-            font-size: clamp(70px, 14vw, 190px);
-            text-transform: uppercase;
-            -webkit-text-stroke: 1.5px var(--ink-dim);
-            color: transparent;
-            padding-right: 60px;
-        }
-
-        @keyframes scroll {
-            from {
-                transform: translateX(0);
-            }
-
-            to {
-                transform: translateX(-50%);
-            }
-        }
-
-        .foot-bottom {
-            display: flex;
-            justify-content: space-between;
-            padding: 0 32px;
-            margin-top: 26px;
-            font-size: 12px;
-            color: var(--ink-dim);
-        }
-
-        @media(max-width:860px) {
-            .about-cols {
-                flex-direction: column;
-                gap: 16px;
-            }
-
-            .drives {
-                grid-template-columns: 1fr;
-                gap: 44px;
-            }
-
-            .work-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .expertise-item {
-                grid-template-columns: 1fr;
-                gap: 10px;
-            }
-
-            .tool-row {
-                grid-template-columns: 48px 1fr;
-            }
-
-            .tool-row p {
-                grid-column: 1/-1;
-            }
-
-            .tool-strip {
-                gap: 10px;
-            }
-
-            .tool-chip .label {
-                display: none;
-            }
-
-            .nav-left {
-                display: none;
-            }
-
-            .about-photo {
-                width: 300px;
-                height: 390px;
-                top: 150px;
-            }
-
-            .about-pin {
-                height: 600px;
-            }
-
-            .final-photo {
-                width: 300px;
-                height: 390px;
-                border-radius: 50%;
-                top: 150px;
-            }
-
-            .final-pin {
-                height: 600px;
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            * {
-                animation-duration: 0.001ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.001ms !important;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mohammad Hassam — Video Editor & Motion Designer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --clay:#C38564;
+    --brown-mid:#6F4A32;
+    --brown-dark:#4C4039;
+    --charcoal:#3E3935;
+    --bg:#211B17;
+    --bg-soft:#2A231F;
+    --ink:#F3ECE4;
+    --ink-dim:#B9AA9E;
+    --line: rgba(243,236,228,0.12);
+    --radius: 2px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:auto;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--clay);color:var(--bg);}
+  h1,h2,h3,.display{
+    font-family:'Instrument Sans',sans-serif;
+    font-weight:700;
+    letter-spacing:-0.02em;
+    line-height:0.95;
+  }
+  a{color:inherit;text-decoration:none;}
+  img{display:block;max-width:100%;}
+  .wrap{max-width:1200px;margin:0 auto;padding:0 32px;}
+  .eyebrow{
+    font-size:12px;
+    letter-spacing:0.06em;
+    color:var(--ink-dim);
+  }
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:13px 26px;
+    border:1px solid var(--clay);
+    border-radius:999px;
+    font-size:13px;
+    font-weight:600;
+    letter-spacing:0.02em;
+    color:var(--ink);
+    background:transparent;
+    cursor:pointer;
+    transition: background .35s ease, color .35s ease, transform .3s ease;
+    white-space:nowrap;
+  }
+  .btn:hover{background:var(--clay);color:#231A13;transform:translateY(-2px);}
+  .btn .dot{width:7px;height:7px;border-radius:50%;background:var(--clay);transition:background .35s ease;}
+  .btn:hover .dot{background:#231A13;}
+
+  /* ---------------- NAV ---------------- */
+  header{
+    position:fixed;top:0;left:0;right:0;z-index:200;
+    background:rgba(33,27,23,0.78);
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-top{
+    padding:16px 32px;
+    display:grid;
+    grid-template-columns:1fr auto 1fr;
+    align-items:center;
+    gap:16px;
+  }
+  .nav-logo-wrap{justify-self:center;display:flex;align-items:center;}
+  .nav-logo{
+    height:34px;width:auto;
+    object-fit:contain;
+    display:block;
+  }
+  .nav-logo-fallback{
+    display:none;
+    font-family:'Instrument Sans';font-weight:700;
+    font-size:15px;letter-spacing:0.04em;
+    color:var(--ink);text-transform:uppercase;
+    white-space:nowrap;
+  }
+  .nav-left{display:flex;align-items:center;gap:11px;font-size:12px;color:var(--ink-dim);letter-spacing:0.06em;text-transform:uppercase;}
+
+  .eq-bars{display:flex;align-items:flex-end;gap:3px;height:15px;}
+  .eq-bars span{
+    width:3px;height:15px;border-radius:2px;
+    background:var(--clay);
+    transform-origin:bottom;
+    animation:eqBounce 1s ease-in-out infinite;
+  }
+  .eq-bars span:nth-child(1){animation-duration:.8s;animation-delay:0s;}
+  .eq-bars span:nth-child(2){animation-duration:1.15s;animation-delay:.12s;}
+  .eq-bars span:nth-child(3){animation-duration:.9s;animation-delay:.22s;}
+  .eq-bars span:nth-child(4){animation-duration:1.3s;animation-delay:.05s;}
+  .eq-bars span:nth-child(5){animation-duration:1s;animation-delay:.18s;}
+  @keyframes eqBounce{0%,100%{transform:scaleY(.28);opacity:.75;}50%{transform:scaleY(1);opacity:1;}}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(0.7);}}
+
+  .nav-right{display:flex;align-items:center;gap:18px;justify-self:end;}
+
+  /* sliding services ticker, attached under the top nav row */
+  .services-ticker{
+    overflow:hidden;
+    border-top:1px solid var(--line);
+    padding:13px 0;
+    background:rgba(0,0,0,0.18);
+  }
+  .services-ticker .track{
+    display:flex;width:max-content;
+    animation:tickerScroll 28s linear infinite;
+  }
+  .services-ticker .group{display:flex;align-items:center;flex-shrink:0;}
+  .services-ticker .item{
+    font-size:17px;font-weight:600;
+    text-transform:uppercase;letter-spacing:0.03em;
+    color:var(--ink-dim);
+    padding:0 26px;white-space:nowrap;
+  }
+  .services-ticker .item .accent{color:var(--clay);}
+  .services-ticker .sep{color:var(--clay);opacity:.7;font-size:18px;line-height:0;position:relative;top:-1px;}
+  @keyframes tickerScroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+  @media(max-width:700px){
+    .services-ticker .item{font-size:14px;padding:0 18px;}
+  }
+
+  /* ---------------- HERO ---------------- */
+  .hero{
+    position:relative;
+    padding:240px 0 60px;
+    text-align:center;
+  }
+  .avail{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:7px 16px;border:1px solid var(--line);border-radius:999px;
+    font-size:11px;letter-spacing:0.08em;color:var(--ink-dim);
+    margin-bottom:36px;
+  }
+  .avail .pulse{width:6px;height:6px;border-radius:50%;background:#7EDB8F;animation:pulse 1.8s ease-in-out infinite;}
+
+  .hero-name{
+    font-size:clamp(52px,10vw,148px);
+    text-transform:uppercase;
+    color:var(--ink);
+  }
+  .hero-name .line{overflow:hidden;}
+  .hero-name .line span{display:block;transform:translateY(105%);animation:riseUp .9s cubic-bezier(.2,.9,.25,1) forwards;}
+  .hero-name .line:nth-child(2) span{animation-delay:.12s;color:var(--clay);-webkit-text-stroke:2px var(--clay);}
+  @keyframes riseUp{to{transform:translateY(0);}}
+
+  .tool-strip{
+    display:flex;justify-content:center;align-items:center;flex-wrap:wrap;
+    gap:14px;
+    max-width:1000px;margin:50px auto 0;padding:0 32px;
+  }
+  .tool-chip{
+    display:flex;align-items:center;gap:10px;
+    padding:10px 18px 10px 10px;
+    border:1px solid var(--line);
+    border-radius:999px;
+    background:rgba(243,236,228,0.02);
+  }
+  .tool-chip .badge{
+    width:30px;height:30px;border-radius:8px;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Instrument Sans';font-weight:700;font-size:12px;color:#fff;
+    flex-shrink:0;
+  }
+  .tool-chip span.label{font-size:12px;letter-spacing:0.03em;color:var(--ink-dim);white-space:nowrap;}
+  .badge.pr{background:#00005B;}
+  .badge.ae{background:#00005B;}
+  .badge.ai{background:#330000;}
+  .badge.ps{background:#001E36;}
+  .badge.c4{background:#141414;}
+  .badge.fig{background:#1E1E1E;}
+
+  /* ---------------- STUDIO PACKAGES (replaces old hero photo block) ---------------- */
+  .packages{
+    width:100vw;
+    margin:90px calc(50% - 50vw) 0;
+    padding:110px 32px;
+    background:linear-gradient(180deg,#241D19 0%, #17110E 100%);
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+  }
+  .packages-head{max-width:1200px;margin:0 auto 60px;text-align:center;}
+  .packages-head .sec-title{margin-bottom:16px;}
+  .packages-head p{color:var(--ink-dim);font-size:16px;max-width:520px;margin:0 auto;}
+  .package-grid{
+    max-width:1200px;margin:0 auto;
+    display:grid;grid-template-columns:repeat(3,1fr);gap:2px;
+    background:var(--line);border:1px solid var(--line);
+  }
+  .package-card{
+    background:var(--bg);
+    padding:46px 34px;
+    display:flex;flex-direction:column;
+    transition:background .35s ease, transform .35s ease;
+    position:relative;
+  }
+  .package-card:hover{background:var(--bg-soft);transform:translateY(-6px);}
+  .package-card.featured{background:var(--bg-soft);}
+  .package-card .tag{
+    align-self:flex-start;
+    font-size:10px;letter-spacing:0.08em;color:var(--clay);
+    border:1px solid var(--clay);border-radius:999px;padding:5px 12px;
+    margin-bottom:22px;text-transform:uppercase;
+  }
+  .package-card h3{font-size:26px;text-transform:uppercase;margin-bottom:12px;}
+  .package-card .desc{font-size:14px;color:var(--ink-dim);line-height:1.7;margin-bottom:28px;}
+  .package-card ul{list-style:none;margin-bottom:36px;flex-grow:1;}
+  .package-card li{
+    font-size:14px;color:var(--ink-dim);
+    padding:12px 0;border-top:1px solid var(--line);
+    display:flex;align-items:center;gap:10px;
+  }
+  .package-card li:last-child{border-bottom:1px solid var(--line);}
+  .package-card li::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--clay);flex-shrink:0;}
+  .package-card .btn{width:100%;justify-content:center;}
+
+  @media(max-width:860px){
+    .package-grid{grid-template-columns:1fr;}
+  }
+
+  /* ---------------- SECTION HEADS ---------------- */
+  section{padding:130px 0;position:relative;}
+  .sec-head{
+    display:flex;justify-content:space-between;align-items:flex-end;
+    margin-bottom:60px;gap:40px;flex-wrap:wrap;
+  }
+  .sec-title{font-size:clamp(38px,5.5vw,64px);text-transform:uppercase;}
+  .sec-title em{font-style:normal;color:var(--clay);-webkit-text-stroke:1.4px var(--clay);}
+  .sec-sub{max-width:400px;font-size:15px;color:var(--ink-dim);line-height:1.65;}
+
+  /* ---------------- WORK GRID ---------------- */
+  .work-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--line);border:1px solid var(--line);}
+  .work-card{
+    position:relative;background:var(--bg);
+    aspect-ratio:16/11;overflow:hidden;
+    display:flex;flex-direction:column;justify-content:space-between;
+    padding:26px;
+    cursor:pointer;
+  }
+  .work-thumb{
+    position:absolute;inset:0;z-index:0;
+    transition:transform .7s cubic-bezier(.2,.9,.25,1), filter .5s ease;
+    filter:saturate(.85);
+  }
+  .work-card:hover .work-thumb{transform:scale(1.06);filter:saturate(1.05);}
+  .work-thumb::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg, rgba(23,17,14,.78) 0%, rgba(23,17,14,.15) 45%, rgba(23,17,14,.55) 100%);}
+  .thumb-icon{
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    opacity:.55;
+  }
+  .thumb-icon svg{width:56px;height:56px;stroke:var(--ink);}
+  .work-top{position:relative;z-index:1;display:flex;justify-content:space-between;font-size:11px;letter-spacing:0.06em;color:var(--ink-dim);}
+  .work-bottom{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:flex-end;}
+  .work-bottom h3{font-size:22px;text-transform:uppercase;color:var(--ink);}
+  .work-bottom .cat{font-size:11px;color:var(--ink-dim);margin-top:6px;letter-spacing:0.04em;}
+  .work-bottom .yr{font-size:12px;color:var(--ink-dim);}
+  .play{
+    width:44px;height:44px;border-radius:50%;border:1px solid var(--clay);
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+  }
+  .play svg{width:14px;height:14px;fill:var(--clay);}
+
+  /* different gradient tints per card via nth-child */
+  .work-card:nth-child(1) .work-thumb{background:linear-gradient(140deg,#6F4A32,#2A231F 70%);}
+  .work-card:nth-child(2) .work-thumb{background:linear-gradient(140deg,#C38564,#3E3935 70%);}
+  .work-card:nth-child(3) .work-thumb{background:linear-gradient(140deg,#4C4039,#17110E 70%);}
+  .work-card:nth-child(4) .work-thumb{background:linear-gradient(140deg,#8a5a3d,#2A231F 70%);}
+  .work-card:nth-child(5) .work-thumb{background:linear-gradient(140deg,#3E3935,#6F4A32 70%);}
+  .work-card:nth-child(6) .work-thumb{background:linear-gradient(140deg,#C38564,#4C4039 70%);}
+  .work-card:nth-child(7) .work-thumb{background:linear-gradient(140deg,#6F4A32,#17110E 70%);}
+  .work-card:nth-child(8) .work-thumb{background:linear-gradient(140deg,#4C4039,#C38564 75%);}
+
+  /* ---------------- ABOUT ---------------- */
+  .about{text-align:center;display:flex;flex-direction:column;align-items:center;}
+  .about-dot{width:6px;height:6px;border-radius:50%;background:var(--clay);margin-bottom:34px;}
+
+  .about-pin{
+    position:relative;
+    width:100%;
+    height:920px;
+    display:flex;
+    justify-content:center;
+  }
+  .about-heading{
+    position:absolute;
+    top:0;left:0;right:0;
+    font-size:clamp(34px,6.4vw,68px);
+    text-transform:uppercase;
+    z-index:1;
+    will-change:opacity, transform;
+  }
+  .about-photo{
+    position:absolute;
+    top:180px;
+    width:580px;height:720px;
+    border-radius:50%;
+    background-image:
+      linear-gradient(0deg, rgba(23,17,14,.12), rgba(23,17,14,0)),
+      url("h.jpeg");
+    background-size:cover;
+    background-position:center top;
+    display:flex;align-items:flex-end;justify-content:center;
+    border:1px solid var(--line);
+    filter:grayscale(0.2);
+    z-index:2;
+    will-change:transform;
+  }
+  .about-photo .ring{
+    margin-bottom:24px;
+    background:rgba(23,17,14,0.6);
+    width:44px;height:44px;border-radius:50%;border:1px dashed var(--clay);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Instrument Sans';font-weight:700;font-size:14px;color:var(--clay);
+  }
+  .about-copy{margin-top:26px;}
+  .about-copy p{font-size:22px;line-height:1.85;color:var(--ink-dim);margin-bottom:22px;max-width:780px;}
+  .about-cols{display:flex;gap:60px;max-width:820px;margin:26px 0 8px;text-align:left;}
+  .about-cols p{margin:0;font-size:19px;line-height:1.8;}
+  .about .btn{margin-top:26px;}
+
+  /* ---------------- EXPERTISE ---------------- */
+  .expertise-list{border-top:1px solid var(--line);}
+  .expertise-item{
+    display:grid;grid-template-columns:70px 1fr 1.3fr;gap:32px;
+    padding:34px 0;border-bottom:1px solid var(--line);
+    align-items:start;
+  }
+  .expertise-item .num{font-size:13px;color:var(--clay);font-family:'Instrument Sans';}
+  .expertise-item h3{font-size:24px;text-transform:uppercase;letter-spacing:-0.01em;}
+  .expertise-item p{font-size:19px;color:var(--ink-dim);line-height:1.8;max-width:560px;}
+
+  /* ---------------- DRIVES ---------------- */
+  .drives{display:grid;grid-template-columns:0.9fr 1.1fr;gap:80px;}
+  .drives h2{font-size:clamp(30px,4vw,46px);text-transform:uppercase;}
+  .drives .copy p{font-size:20px;line-height:1.9;color:var(--ink-dim);margin-bottom:24px;max-width:600px;}
+  .signature{font-family:'Caveat',cursive;font-size:44px;color:var(--clay);margin-top:26px;}
+
+  /* ---------------- TOOLS ---------------- */
+  .tool-row{
+    display:grid;grid-template-columns:64px 1fr 1.4fr;gap:28px;align-items:center;
+    padding:28px 24px;border:1px solid var(--line);margin-bottom:-1px;
+    transition:background .3s ease;
+  }
+  .tool-row:hover{background:rgba(195,133,100,0.05);}
+  .tool-icon{
+    width:48px;height:48px;border-radius:50%;background:var(--bg-soft);
+    display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--clay);border:1px solid var(--line);
+  }
+  .tool-row h4{font-size:18px;text-transform:uppercase;margin-bottom:4px;}
+  .tool-row .tag{font-size:11px;color:var(--clay);letter-spacing:0.06em;margin-bottom:6px;display:block;}
+  .tool-row p{font-size:18px;color:var(--ink-dim);line-height:1.75;}
+
+  /* ---------------- FAQ ---------------- */
+  .faq-item{border-bottom:1px solid var(--line);}
+  .faq-q{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:26px 4px;cursor:pointer;font-size:17px;
+  }
+  .faq-q .plus{font-size:20px;color:var(--clay);transition:transform .35s ease;flex-shrink:0;margin-left:20px;}
+  .faq-item.open .plus{transform:rotate(45deg);}
+  .faq-a{max-height:0;overflow:hidden;transition:max-height .4s ease;}
+  .faq-item.open .faq-a{max-height:280px;}
+  .faq-a p{padding:0 4px 26px;font-size:19px;color:var(--ink-dim);line-height:1.8;max-width:720px;}
+
+  /* ---------------- FINAL CTA ---------------- */
+  .final{text-align:center;padding-bottom:60px;}
+
+  .final-pin{
+    position:relative;
+    width:100%;
+    height:940px;
+    display:flex;
+    justify-content:center;
+  }
+  .final-heading{
+    position:absolute;
+    top:0;left:0;right:0;
+    z-index:1;
+    will-change:opacity, transform;
+  }
+  .final-heading .sec-title{margin-bottom:30px;}
+  .final-photo{
+    position:absolute;
+    top:200px;
+    width:580px;height:720px;border-radius:50%;
+    background-image:url("h.jpeg");
+    background-size:cover;background-position:center top;
+    display:flex;align-items:flex-end;justify-content:center;border:1px solid var(--line);
+    color:var(--clay);font-family:'Instrument Sans';font-size:18px;
+    z-index:2;
+    will-change:transform;
+    filter:grayscale(0.2);
+  }
+  .final-photo span{
+    background:rgba(23,17,14,0.6);border-radius:50%;width:34px;height:34px;
+    display:flex;align-items:center;justify-content:center;margin-bottom:26px;
+    font-size:12px;font-weight:700;border:1px dashed var(--clay);color:var(--clay);
+  }
+  .final-copy{margin-top:20px;}
+  .final p.bio{max-width:640px;margin:0 auto;color:var(--ink-dim);font-size:19px;line-height:1.8;}
+  .socials{display:flex;gap:26px;justify-content:center;margin-top:26px;font-size:13px;color:var(--ink-dim);}
+  .socials a:hover{color:var(--clay);}
+
+  /* ---------------- FOOTER ---------------- */
+  footer{border-top:1px solid var(--line);padding:70px 0 30px;overflow:hidden;}
+  .foot-marquee{display:flex;white-space:nowrap;animation:scroll 22s linear infinite;}
+  .foot-marquee span{
+    font-family:'Instrument Sans';font-weight:800;
+    font-size:clamp(70px,14vw,190px);
+    text-transform:uppercase;
+    -webkit-text-stroke:1.5px var(--ink-dim);
+    color:transparent;
+    padding-right:60px;
+  }
+  @keyframes scroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+  .foot-bottom{display:flex;justify-content:space-between;padding:0 32px;margin-top:26px;font-size:12px;color:var(--ink-dim);}
+
+  @media(max-width:860px){
+    .about-cols{flex-direction:column;gap:16px;}
+    .drives{grid-template-columns:1fr;gap:44px;}
+    .work-grid{grid-template-columns:1fr;}
+    .expertise-item{grid-template-columns:1fr;gap:10px;}
+    .tool-row{grid-template-columns:48px 1fr;}
+    .tool-row p{grid-column:1/-1;}
+    .tool-strip{gap:10px;}
+    .tool-chip .label{display:none;}
+    .nav-left{display:none;}
+    .about-photo{width:300px;height:390px;top:150px;}
+    .about-pin{height:600px;}
+    .final-photo{width:300px;height:390px;border-radius:50%;top:150px;}
+    .final-pin{height:600px;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important;animation-iteration-count:1 !important;transition-duration:0.001ms !important;}
+  }
+</style>
 </head>
-
 <body>
 
-    <header>
-        <div class="nav-top">
-            <div class="nav-left">
-                <span class="pulse"></span>
-                <span id="clock">LOCAL / --:--:--</span>
-            </div>
-            <a href="#" class="nav-logo-wrap">
-                <img src="logo.png" alt="Mohammad Hassam" class="nav-logo"
-                    onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                <span class="nav-logo-fallback">MOHAMMAD HASSAM</span>
-            </a>
-            <div class="nav-right">
-                <a href="#contact" class="btn"><span class="dot"></span>Start a Project</a>
-            </div>
+<header>
+  <div class="nav-top">
+    <div class="nav-left">
+      <div class="eq-bars" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <span>On The Timeline</span>
+    </div>
+    <a href="#" class="nav-logo-wrap">
+      <img src="logo.png" alt="Mohammad Hassam" class="nav-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+      <span class="nav-logo-fallback">MOHAMMAD HASSAM</span>
+    </a>
+    <div class="nav-right">
+      <a href="#contact" class="btn"><span class="dot"></span>Start a Project</a>
+    </div>
+  </div>
+
+  <div class="services-ticker">
+    <div class="track">
+      <div class="group">
+        <span class="item">Video Editing</span><span class="sep">•</span>
+        <span class="item">2D &amp; 3D Animation</span><span class="sep">•</span>
+        <span class="item">Design Illustration</span><span class="sep">•</span>
+        <span class="item">Graphic Design</span><span class="sep">•</span>
+        <span class="item">Motion Graphics / VFX</span><span class="sep">•</span>
+        <span class="item">3D Product and Scene Work</span><span class="sep">•</span>
+        <span class="item"><span class="accent">Brand, Commercial, Social &amp; Storytelling Content</span></span><span class="sep">•</span>
+      </div>
+      <div class="group" aria-hidden="true">
+        <span class="item">Video Editing</span><span class="sep">•</span>
+        <span class="item">2D &amp; 3D Animation</span><span class="sep">•</span>
+        <span class="item">Design Illustration</span><span class="sep">•</span>
+        <span class="item">Graphic Design</span><span class="sep">•</span>
+        <span class="item">Motion Graphics / VFX</span><span class="sep">•</span>
+        <span class="item">3D Product and Scene Work</span><span class="sep">•</span>
+        <span class="item"><span class="accent">Brand, Commercial, Social &amp; Storytelling Content</span></span><span class="sep">•</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="wrap">
+    <div class="avail"><span class="pulse"></span>Available for freelance work</div>
+    <h1 class="hero-name">
+      <span class="line"><span>Mohammad</span></span>
+      <span class="line"><span>Hassam</span></span>
+    </h1>
+    <a href="#contact" class="btn" style="margin-top:34px;"><span class="dot"></span>Start a Project</a>
+  </div>
+
+  <div class="tool-strip">
+    <div class="tool-chip"><div class="badge pr">Pr</div><span class="label">Premiere Pro</span></div>
+    <div class="tool-chip"><div class="badge ae">Ae</div><span class="label">After Effects</span></div>
+    <div class="tool-chip"><div class="badge ai">Ai</div><span class="label">Illustrator</span></div>
+    <div class="tool-chip"><div class="badge ps">Ps</div><span class="label">Photoshop</span></div>
+    <div class="tool-chip"><div class="badge c4">C4</div><span class="label">Cinema 4D</span></div>
+    <div class="tool-chip"><div class="badge fig">Fi</div><span class="label">Figma</span></div>
+  </div>
+</section>
+
+<!-- ================= PACKAGES (replaces old hero photo strip) ================= -->
+<section class="packages" id="packages">
+  <div class="packages-head">
+    <span class="eyebrow">How we can work together</span>
+    <h2 class="sec-title" style="margin-top:14px;">Project <em>Packages</em></h2>
+    <p>Three simple ways to get started — the right scope depends on your project, so every package starts with a quick call.</p>
+  </div>
+  <div class="package-grid">
+
+    <div class="package-card">
+      <span class="tag">Starter</span>
+      <h3>Single Edit</h3>
+      <p class="desc">For a focused, one-off piece — a reel, a short promo, or a single animated asset.</p>
+      <ul>
+        <li>1 polished video edit or animation</li>
+        <li>Up to 2 rounds of revisions</li>
+        <li>Sound design & color pass</li>
+        <li>Delivered in your required formats</li>
+      </ul>
+      <a href="#contact" class="btn"><span class="dot"></span>Start a Project</a>
+    </div>
+
+    <div class="package-card featured">
+      <span class="tag">Most Popular</span>
+      <h3>Full Package</h3>
+      <p class="desc">A complete content package for a launch, campaign, or ongoing brand presence.</p>
+      <ul>
+        <li>Multiple edits + motion graphics</li>
+        <li>2D or 3D animated elements</li>
+        <li>Unlimited revisions within scope</li>
+        <li>Priority turnaround</li>
+      </ul>
+      <a href="#contact" class="btn"><span class="dot"></span>Start a Project</a>
+    </div>
+
+    <div class="package-card">
+      <span class="tag">Complete</span>
+      <h3>Brand Bundle</h3>
+      <p class="desc">Video, animation, illustration, and design working together as one visual system.</p>
+      <ul>
+        <li>Video editing & motion design</li>
+        <li>3D animation / product renders</li>
+        <li>Illustration & graphic design</li>
+        <li>Dedicated ongoing support</li>
+      </ul>
+      <a href="#contact" class="btn"><span class="dot"></span>Start a Project</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= WORK ================= -->
+<section id="work">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 class="sec-title">Selected <em>Work</em></h2>
+      <p class="sec-sub">Brand, commercial, social, and storytelling content — a mix of edits, animation, and design made for stories worth telling.</p>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="work-grid">
+
+      <div class="work-card">
+        <div class="work-thumb"></div>
+        <div class="thumb-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.4"><path d="M4 4h16v16H4z"/><path d="M9 8l7 4-7 4V8z" fill="currentColor" stroke="none"/></svg></div>
+        <div class="work-top"><span>Brand Film</span><span>Video Editing</span></div>
+        <div class="work-bottom">
+          <div><h3>Northline Coffee Co.</h3><span class="cat">Commercial · 2025</span></div>
+          <div class="play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
         </div>
+      </div>
 
-        <div class="services-ticker">
-            <div class="track">
-                <div class="group">
-                    <span class="item">Video Editing</span><span class="sep">•</span>
-                    <span class="item">2D &amp; 3D Animation</span><span class="sep">•</span>
-                    <span class="item">Design Illustration</span><span class="sep">•</span>
-                    <span class="item">Graphic Design</span><span class="sep">•</span>
-                    <span class="item">Motion Graphics / VFX</span><span class="sep">•</span>
-                    <span class="item">3D Product and Scene Work</span><span class="sep">•</span>
-                    <span class="item"><span class="accent">Brand, Commercial, Social &amp; Storytelling
-                            Content</span></span><span class="sep">•</span>
-                </div>
-                <div class="group" aria-hidden="true">
-                    <span class="item">Video Editing</span><span class="sep">•</span>
-                    <span class="item">2D &amp; 3D Animation</span><span class="sep">•</span>
-                    <span class="item">Design Illustration</span><span class="sep">•</span>
-                    <span class="item">Graphic Design</span><span class="sep">•</span>
-                    <span class="item">Motion Graphics / VFX</span><span class="sep">•</span>
-                    <span class="item">3D Product and Scene Work</span><span class="sep">•</span>
-                    <span class="item"><span class="accent">Brand, Commercial, Social &amp; Storytelling
-                            Content</span></span><span class="sep">•</span>
-                </div>
-            </div>
+      <div class="work-card">
+        <div class="work-thumb"></div>
+        <div class="thumb-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.4"><circle cx="12" cy="12" r="8"/><path d="M12 4v16M4 12h16"/></svg></div>
+        <div class="work-top"><span>Explainer</span><span>2D Animation</span></div>
+        <div class="work-bottom">
+          <div><h3>Finlyt App Walkthrough</h3><span class="cat">Motion Design · 2025</span></div>
+          <div class="play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
         </div>
-    </header>
+      </div>
 
-    <!-- ================= HERO ================= -->
-    <section class="hero">
-        <div class="wrap">
-            <div class="avail"><span class="pulse"></span>Available for freelance work</div>
-            <h1 class="hero-name">
-                <span class="line"><span>Mohammad</span></span>
-                <span class="line"><span>Hassam</span></span>
-            </h1>
-            <a href="#contact" class="btn" style="margin-top:34px;"><span class="dot"></span>Start a Project</a>
+      <div class="work-card">
+        <div class="work-thumb"></div>
+        <div class="thumb-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.4"><path d="M3 16l5-6 4 4 5-7 4 5"/></svg></div>
+        <div class="work-top"><span>Product Render</span><span>3D Animation</span></div>
+        <div class="work-bottom">
+          <div><h3>Halo Wireless Earbuds</h3><span class="cat">3D / CGI · 2024</span></div>
+          <div class="play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
         </div>
+      </div>
 
-        <div class="tool-strip">
-            <div class="tool-chip">
-                <div class="badge pr">Pr</div><span class="label">Premiere Pro</span>
-            </div>
-            <div class="tool-chip">
-                <div class="badge ae">Ae</div><span class="label">After Effects</span>
-            </div>
-            <div class="tool-chip">
-                <div class="badge ai">Ai</div><span class="label">Illustrator</span>
-            </div>
-            <div class="tool-chip">
-                <div class="badge ps">Ps</div><span class="label">Photoshop</span>
-            </div>
-            <div class="tool-chip">
-                <div class="badge c4">C4</div><span class="label">Cinema 4D</span>
-            </div>
-            <div class="tool-chip">
-                <div class="badge fig">Fi</div><span class="label">Figma</span>
-            </div>
+      <div class="work-card">
+        <div class="work-thumb"></div>
+        <div class="thumb-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.4"><rect x="4" y="4" width="16" height="16" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M4 16l5-5 4 4 3-3 4 4"/></svg></div>
+        <div class="work-top"><span>Cover Art</span><span>Illustration</span></div>
+        <div class="work-bottom">
+          <div><h3>Wanderlust EP Artwork</h3><span class="cat">Illustration · 2024</span></div>
+          <div class="play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
         </div>
-    </section>
+      </div>
 
-    <!-- ================= PACKAGES (replaces old hero photo strip) ================= -->
-    <section class="packages" id="packages">
-        <div class="packages-head">
-            <span class="eyebrow">How we can work together</span>
-            <h2 class="sec-title" style="margin-top:14px;">Project <em>Packages</em></h2>
-            <p>Three simple ways to get started — the right scope depends on your project, so every package starts with
-                a quick call.</p>
+      <div class="work-card">
+        <div class="work-thumb"></div>
+        <div class="thumb-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.4"><path d="M4 12h16M4 6h16M4 18h10"/></svg></div>
+        <div class="work-top"><span>Highlight Reel</span><span>Video Editing</span></div>
+        <div class="work-bottom">
+          <div><h3>Bloom Festival 2024</h3><span class="cat">Event · 2024</span></div>
+          <div class="play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
         </div>
-        <div class="package-grid">
+      </div>
 
-            <div class="package-card">
-                <span class="tag">Starter</span>
-                <h3>Single Edit</h3>
-                <p class="desc">For a focused, one-off piece — a reel, a short promo, or a single animated asset.</p>
-                <ul>
-                    <li>1 polished video edit or animation</li>
-                    <li>Up to 2 rounds of revisions</li>
-                    <li>Sound design & color pass</li>
-                    <li>Delivered in your required formats</li>
-                </ul>
-                <a href="#contact" class="btn"><span class="dot"></span>Start a Project</a>
-            </div>
-
-            <div class="package-card featured">
-                <span class="tag">Most Popular</span>
-                <h3>Full Package</h3>
-                <p class="desc">A complete content package for a launch, campaign, or ongoing brand presence.</p>
-                <ul>
-                    <li>Multiple edits + motion graphics</li>
-                    <li>2D or 3D animated elements</li>
-                    <li>Unlimited revisions within scope</li>
-                    <li>Priority turnaround</li>
-                </ul>
-                <a href="#contact" class="btn"><span class="dot"></span>Start a Project</a>
-            </div>
-
-            <div class="package-card">
-                <span class="tag">Complete</span>
-                <h3>Brand Bundle</h3>
-                <p class="desc">Video, animation, illustration, and design working together as one visual system.</p>
-                <ul>
-                    <li>Video editing & motion design</li>
-                    <li>3D animation / product renders</li>
-                    <li>Illustration & graphic design</li>
-                    <li>Dedicated ongoing support</li>
-                </ul>
-                <a href="#contact" class="btn"><span class="dot"></span>Start a Project</a>
-            </div>
-
+      <div class="work-card">
+        <div class="work-thumb"></div>
+        <div class="thumb-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.4"><path d="M12 3v18M5 8l7-5 7 5M5 16l7 5 7-5"/></svg></div>
+        <div class="work-top"><span>Logo Reveal</span><span>Motion Graphics</span></div>
+        <div class="work-bottom">
+          <div><h3>Orbit Studio Ident</h3><span class="cat">Branding · 2024</span></div>
+          <div class="play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
         </div>
-    </section>
+      </div>
 
-    <!-- ================= WORK ================= -->
-    <section id="work">
-        <div class="wrap">
-            <div class="sec-head">
-                <h2 class="sec-title">Selected <em>Work</em></h2>
-                <p class="sec-sub">Brand, commercial, social, and storytelling content — a mix of edits, animation, and
-                    design made for stories worth telling.</p>
-            </div>
+      <div class="work-card">
+        <div class="work-thumb"></div>
+        <div class="thumb-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.4"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M3 9h18"/></svg></div>
+        <div class="work-top"><span>Social Campaign</span><span>Graphic Design</span></div>
+        <div class="work-bottom">
+          <div><h3>Verve Skincare Launch</h3><span class="cat">Branding · 2023</span></div>
+          <div class="play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
         </div>
-        <div class="wrap">
-            <div class="work-grid">
+      </div>
 
-                <div class="work-card">
-                    <div class="work-thumb"></div>
-                    <div class="thumb-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.4">
-                            <path d="M4 4h16v16H4z" />
-                            <path d="M9 8l7 4-7 4V8z" fill="currentColor" stroke="none" />
-                        </svg></div>
-                    <div class="work-top"><span>Brand Film</span><span>Video Editing</span></div>
-                    <div class="work-bottom">
-                        <div>
-                            <h3>Northline Coffee Co.</h3><span class="cat">Commercial · 2025</span>
-                        </div>
-                        <div class="play"><svg viewBox="0 0 24 24">
-                                <path d="M8 5v14l11-7z" />
-                            </svg></div>
-                    </div>
-                </div>
-
-                <div class="work-card">
-                    <div class="work-thumb"></div>
-                    <div class="thumb-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.4">
-                            <circle cx="12" cy="12" r="8" />
-                            <path d="M12 4v16M4 12h16" />
-                        </svg></div>
-                    <div class="work-top"><span>Explainer</span><span>2D Animation</span></div>
-                    <div class="work-bottom">
-                        <div>
-                            <h3>Finlyt App Walkthrough</h3><span class="cat">Motion Design · 2025</span>
-                        </div>
-                        <div class="play"><svg viewBox="0 0 24 24">
-                                <path d="M8 5v14l11-7z" />
-                            </svg></div>
-                    </div>
-                </div>
-
-                <div class="work-card">
-                    <div class="work-thumb"></div>
-                    <div class="thumb-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.4">
-                            <path d="M3 16l5-6 4 4 5-7 4 5" />
-                        </svg></div>
-                    <div class="work-top"><span>Product Render</span><span>3D Animation</span></div>
-                    <div class="work-bottom">
-                        <div>
-                            <h3>Halo Wireless Earbuds</h3><span class="cat">3D / CGI · 2024</span>
-                        </div>
-                        <div class="play"><svg viewBox="0 0 24 24">
-                                <path d="M8 5v14l11-7z" />
-                            </svg></div>
-                    </div>
-                </div>
-
-                <div class="work-card">
-                    <div class="work-thumb"></div>
-                    <div class="thumb-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.4">
-                            <rect x="4" y="4" width="16" height="16" rx="2" />
-                            <circle cx="9" cy="9" r="2" />
-                            <path d="M4 16l5-5 4 4 3-3 4 4" />
-                        </svg></div>
-                    <div class="work-top"><span>Cover Art</span><span>Illustration</span></div>
-                    <div class="work-bottom">
-                        <div>
-                            <h3>Wanderlust EP Artwork</h3><span class="cat">Illustration · 2024</span>
-                        </div>
-                        <div class="play"><svg viewBox="0 0 24 24">
-                                <path d="M8 5v14l11-7z" />
-                            </svg></div>
-                    </div>
-                </div>
-
-                <div class="work-card">
-                    <div class="work-thumb"></div>
-                    <div class="thumb-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.4">
-                            <path d="M4 12h16M4 6h16M4 18h10" />
-                        </svg></div>
-                    <div class="work-top"><span>Highlight Reel</span><span>Video Editing</span></div>
-                    <div class="work-bottom">
-                        <div>
-                            <h3>Bloom Festival 2024</h3><span class="cat">Event · 2024</span>
-                        </div>
-                        <div class="play"><svg viewBox="0 0 24 24">
-                                <path d="M8 5v14l11-7z" />
-                            </svg></div>
-                    </div>
-                </div>
-
-                <div class="work-card">
-                    <div class="work-thumb"></div>
-                    <div class="thumb-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.4">
-                            <path d="M12 3v18M5 8l7-5 7 5M5 16l7 5 7-5" />
-                        </svg></div>
-                    <div class="work-top"><span>Logo Reveal</span><span>Motion Graphics</span></div>
-                    <div class="work-bottom">
-                        <div>
-                            <h3>Orbit Studio Ident</h3><span class="cat">Branding · 2024</span>
-                        </div>
-                        <div class="play"><svg viewBox="0 0 24 24">
-                                <path d="M8 5v14l11-7z" />
-                            </svg></div>
-                    </div>
-                </div>
-
-                <div class="work-card">
-                    <div class="work-thumb"></div>
-                    <div class="thumb-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.4">
-                            <rect x="3" y="5" width="18" height="14" rx="1" />
-                            <path d="M3 9h18" />
-                        </svg></div>
-                    <div class="work-top"><span>Social Campaign</span><span>Graphic Design</span></div>
-                    <div class="work-bottom">
-                        <div>
-                            <h3>Verve Skincare Launch</h3><span class="cat">Branding · 2023</span>
-                        </div>
-                        <div class="play"><svg viewBox="0 0 24 24">
-                                <path d="M8 5v14l11-7z" />
-                            </svg></div>
-                    </div>
-                </div>
-
-                <div class="work-card">
-                    <div class="work-thumb"></div>
-                    <div class="thumb-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.4">
-                            <path d="M4 20l6-14 4 8 3-5 3 11" />
-                        </svg></div>
-                    <div class="work-top"><span>Character Loop</span><span>2D / 3D Animation</span></div>
-                    <div class="work-bottom">
-                        <div>
-                            <h3>Dash the Courier — Pilot</h3><span class="cat">Animation · 2023</span>
-                        </div>
-                        <div class="play"><svg viewBox="0 0 24 24">
-                                <path d="M8 5v14l11-7z" />
-                            </svg></div>
-                    </div>
-                </div>
-
-            </div>
+      <div class="work-card">
+        <div class="work-thumb"></div>
+        <div class="thumb-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.4"><path d="M4 20l6-14 4 8 3-5 3 11"/></svg></div>
+        <div class="work-top"><span>Character Loop</span><span>2D / 3D Animation</span></div>
+        <div class="work-bottom">
+          <div><h3>Dash the Courier — Pilot</h3><span class="cat">Animation · 2023</span></div>
+          <div class="play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
         </div>
-        <div class="wrap" style="text-align:center;margin-top:56px;">
-            <a href="#contact" class="btn"><span class="dot"></span>Start a Project</a>
-        </div>
-    </section>
+      </div>
 
-    <!-- ================= ABOUT ================= -->
-    <section id="about">
-        <div class="wrap about">
-            <span class="about-dot"></span>
+    </div>
+  </div>
+  <div class="wrap" style="text-align:center;margin-top:56px;">
+    <a href="#contact" class="btn"><span class="dot"></span>Start a Project</a>
+  </div>
+</section>
 
-            <div class="about-pin" id="aboutPin">
-                <h2 class="about-heading" id="aboutHeading">
-                    <span class="line">More About</span><br>
-                    <span class="line">Hassam</span>
-                </h2>
-                <div class="about-photo" id="aboutPhoto">
-                    <div class="ring">MH</div>
-                </div>
-            </div>
+<!-- ================= ABOUT ================= -->
+<section id="about">
+  <div class="wrap about">
+    <span class="about-dot"></span>
 
-            <div class="about-copy">
-                <p>I'm a creative video editor and animator with over 5 years of experience. I'm passionate about visual
-                    storytelling and dedicated to crafting polished, engaging content across video, motion, and design
-                    that connects with audiences.</p>
-                <div class="about-cols">
-                    <p>I bring stories to life through the rhythm of editing and the energy of motion. My approach is
-                        intuitive, shaped by years of hands-on experience across editing, animation, and design.</p>
-                    <p>I believe great work isn't just about visuals — it's about emotion, timing, and connection,
-                        whether it's a 15-second edit or a full 3D scene.</p>
-                </div>
-                <a href="#" class="btn"><span class="dot"></span>Download Portfolio</a>
-            </div>
-        </div>
-    </section>
+    <div class="about-pin" id="aboutPin">
+      <h2 class="about-heading" id="aboutHeading">
+        <span class="line">More About</span><br>
+        <span class="line">Hassam</span>
+      </h2>
+      <div class="about-photo" id="aboutPhoto">
+        <div class="ring">MH</div>
+      </div>
+    </div>
 
-    <!-- ================= EXPERTISE ================= -->
-    <section id="expertise">
-        <div class="wrap">
-            <div class="sec-head">
-                <h2 class="sec-title">My <em>Expertise</em></h2>
-                <p class="sec-sub">Every project draws on the same core skill set — mixed and matched depending on what
-                    the work needs.</p>
-            </div>
-            <div class="expertise-list">
-                <div class="expertise-item">
-                    <span class="num">01</span>
-                    <h3>Video Editing</h3>
-                    <p>Sharp, story-driven edits for brands, creators, and events — built with strong pacing, clean
-                        transitions, and sound design using Premiere Pro and Final Cut Pro.</p>
-                </div>
-                <div class="expertise-item">
-                    <span class="num">02</span>
-                    <h3>2D & 3D Animation</h3>
-                    <p>Motion graphics, explainer animation, and 3D renders that bring static ideas to life — from logo
-                        reveals to full character and product animation.</p>
-                </div>
-                <div class="expertise-item">
-                    <span class="num">03</span>
-                    <h3>Design Illustration</h3>
-                    <p>Custom illustration and character design built to give a brand or story a visual identity that
-                        feels hand-made and distinct.</p>
-                </div>
-                <div class="expertise-item">
-                    <span class="num">04</span>
-                    <h3>Graphic Design</h3>
-                    <p>Clean, considered design for branding, social campaigns, and print — where every layout, color,
-                        and typeface choice earns its place.</p>
-                </div>
-                <div class="expertise-item">
-                    <span class="num">05</span>
-                    <h3>Motion Graphics / VFX</h3>
-                    <p>Animated titles, transitions, and visual effects layered into edits — the motion polish that
-                        makes a piece feel premium and intentional.</p>
-                </div>
-                <div class="expertise-item">
-                    <span class="num">06</span>
-                    <h3>3D Product & Scene Work</h3>
-                    <p>3D modeling, product renders, and full scene builds with realistic lighting and materials — for
-                        launches, ads, and hero visuals.</p>
-                </div>
-            </div>
-        </div>
-        <div class="wrap" style="text-align:center;margin-top:56px;">
-            <a href="#contact" class="btn"><span class="dot"></span>Start a Project</a>
-        </div>
-    </section>
+    <div class="about-copy">
+      <p>I'm a creative video editor and animator with over 5 years of experience. I'm passionate about visual storytelling and dedicated to crafting polished, engaging content across video, motion, and design that connects with audiences.</p>
+      <div class="about-cols">
+        <p>I bring stories to life through the rhythm of editing and the energy of motion. My approach is intuitive, shaped by years of hands-on experience across editing, animation, and design.</p>
+        <p>I believe great work isn't just about visuals — it's about emotion, timing, and connection, whether it's a 15-second edit or a full 3D scene.</p>
+      </div>
+      <a href="#" class="btn"><span class="dot"></span>Download Portfolio</a>
+    </div>
+  </div>
+</section>
 
-    <!-- ================= WHAT DRIVES ME ================= -->
-    <section>
-        <div class="wrap drives">
-            <h2>What Drives Me</h2>
-            <div class="copy">
-                <p>I'm driven by the craft of turning raw footage and rough ideas into something that actually moves
-                    people — visually, emotionally, sometimes unexpectedly. Whether I'm editing, animating, or
-                    illustrating, it's never just about the technique; it's about the feeling it leaves behind.</p>
-                <p>I find the real satisfaction in the small details — a transition that lands on the beat, a frame that
-                    finally feels right, a character that comes alive. Every project is a new problem to solve, and I
-                    like pushing myself a little further each time.</p>
-                <div class="signature">Mohammad Hassam</div>
-                <a href="#contact" class="btn" style="margin-top:30px;"><span class="dot"></span>Start a Project</a>
-            </div>
-        </div>
-    </section>
+<!-- ================= EXPERTISE ================= -->
+<section id="expertise">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 class="sec-title">My <em>Expertise</em></h2>
+      <p class="sec-sub">Every project draws on the same core skill set — mixed and matched depending on what the work needs.</p>
+    </div>
+    <div class="expertise-list">
+      <div class="expertise-item">
+        <span class="num">01</span>
+        <h3>Video Editing</h3>
+        <p>Sharp, story-driven edits for brands, creators, and events — built with strong pacing, clean transitions, and sound design using Premiere Pro and Final Cut Pro.</p>
+      </div>
+      <div class="expertise-item">
+        <span class="num">02</span>
+        <h3>2D & 3D Animation</h3>
+        <p>Motion graphics, explainer animation, and 3D renders that bring static ideas to life — from logo reveals to full character and product animation.</p>
+      </div>
+      <div class="expertise-item">
+        <span class="num">03</span>
+        <h3>Design Illustration</h3>
+        <p>Custom illustration and character design built to give a brand or story a visual identity that feels hand-made and distinct.</p>
+      </div>
+      <div class="expertise-item">
+        <span class="num">04</span>
+        <h3>Graphic Design</h3>
+        <p>Clean, considered design for branding, social campaigns, and print — where every layout, color, and typeface choice earns its place.</p>
+      </div>
+      <div class="expertise-item">
+        <span class="num">05</span>
+        <h3>Motion Graphics / VFX</h3>
+        <p>Animated titles, transitions, and visual effects layered into edits — the motion polish that makes a piece feel premium and intentional.</p>
+      </div>
+      <div class="expertise-item">
+        <span class="num">06</span>
+        <h3>3D Product & Scene Work</h3>
+        <p>3D modeling, product renders, and full scene builds with realistic lighting and materials — for launches, ads, and hero visuals.</p>
+      </div>
+    </div>
+  </div>
+  <div class="wrap" style="text-align:center;margin-top:56px;">
+    <a href="#contact" class="btn"><span class="dot"></span>Start a Project</a>
+  </div>
+</section>
 
-    <!-- ================= TOOLS ================= -->
-    <section>
-        <div class="wrap">
-            <div class="sec-head">
-                <h2 class="sec-title">Creative <em>Toolkit</em></h2>
-            </div>
-            <div>
-                <div class="tool-row">
-                    <div class="tool-icon">Pr</div>
-                    <div><span class="tag">Video Editing & Sequencing</span>
-                        <h4>Premiere Pro</h4>
-                    </div>
-                    <p>My primary tool for editing — timeline management, multi-cam sequencing, and precise pacing on
-                        every cut.</p>
-                </div>
-                <div class="tool-row">
-                    <div class="tool-icon">Ae</div>
-                    <div><span class="tag">Motion Graphics & VFX</span>
-                        <h4>After Effects</h4>
-                    </div>
-                    <p>Where the motion design happens — animated titles, transitions, and visual effects layered into
-                        every edit.</p>
-                </div>
-                <div class="tool-row">
-                    <div class="tool-icon">C4</div>
-                    <div><span class="tag">3D Modeling & Rendering</span>
-                        <h4>Cinema 4D / Blender</h4>
-                    </div>
-                    <p>Used for building 3D scenes, product renders, and animated models with realistic lighting and
-                        materials.</p>
-                </div>
-                <div class="tool-row">
-                    <div class="tool-icon">Ai</div>
-                    <div><span class="tag">Illustration & Vector Art</span>
-                        <h4>Illustrator</h4>
-                    </div>
-                    <p>My go-to for illustration and vector work — clean linework and scalable artwork for any format.
-                    </p>
-                </div>
-                <div class="tool-row">
-                    <div class="tool-icon">Ps</div>
-                    <div><span class="tag">Graphic Design & Retouching</span>
-                        <h4>Photoshop</h4>
-                    </div>
-                    <p>For layered compositing, retouching, and the graphic design work behind every finished frame.</p>
-                </div>
-            </div>
-        </div>
-        <div class="wrap" style="text-align:center;margin-top:56px;">
-            <a href="#contact" class="btn"><span class="dot"></span>Start a Project</a>
-        </div>
-    </section>
+<!-- ================= WHAT DRIVES ME ================= -->
+<section>
+  <div class="wrap drives">
+    <h2>What Drives Me</h2>
+    <div class="copy">
+      <p>I'm driven by the craft of turning raw footage and rough ideas into something that actually moves people — visually, emotionally, sometimes unexpectedly. Whether I'm editing, animating, or illustrating, it's never just about the technique; it's about the feeling it leaves behind.</p>
+      <p>I find the real satisfaction in the small details — a transition that lands on the beat, a frame that finally feels right, a character that comes alive. Every project is a new problem to solve, and I like pushing myself a little further each time.</p>
+      <div class="signature">Mohammad Hassam</div>
+      <a href="#contact" class="btn" style="margin-top:30px;"><span class="dot"></span>Start a Project</a>
+    </div>
+  </div>
+</section>
 
-    <!-- ================= FAQ ================= -->
-    <section>
-        <div class="wrap">
-            <div class="sec-head">
-                <h2 class="sec-title">Frequently <em>Asked</em></h2>
-            </div>
-            <div>
-                <div class="faq-item open">
-                    <div class="faq-q"><span>What industries do you work with?</span><span class="plus">+</span></div>
-                    <div class="faq-a">
-                        <p>Mostly brands, creators, and startups — commercials, social content, product launches, and
-                            event coverage across fashion, tech, food, and music.</p>
-                    </div>
-                </div>
-                <div class="faq-item">
-                    <div class="faq-q"><span>What services do you offer?</span><span class="plus">+</span></div>
-                    <div class="faq-a">
-                        <p>Video editing, 2D and 3D animation, illustration, and graphic design — either as standalone
-                            work or combined into one full visual package.</p>
-                    </div>
-                </div>
-                <div class="faq-item">
-                    <div class="faq-q"><span>Can I see more of your previous work?</span><span class="plus">+</span>
-                    </div>
-                    <div class="faq-a">
-                        <p>Yes — the selected work section above is a snapshot. Reach out and I'll share a fuller
-                            portfolio and reel based on what you need.</p>
-                    </div>
-                </div>
-                <div class="faq-item">
-                    <div class="faq-q"><span>How does your process work?</span><span class="plus">+</span></div>
-                    <div class="faq-a">
-                        <p>We start with a quick call to define the goal and tone, then I move through drafts,
-                            revisions, and a final polished delivery — with clear check-ins throughout.</p>
-                    </div>
-                </div>
-                <div class="faq-item">
-                    <div class="faq-q"><span>What software do you use?</span><span class="plus">+</span></div>
-                    <div class="faq-a">
-                        <p>Premiere Pro and After Effects for editing and motion, Cinema 4D / Blender for 3D, and
-                            Illustrator and Photoshop for design and illustration.</p>
-                    </div>
-                </div>
-            </div>
-            <div style="text-align:center;margin-top:56px;">
-                <a href="#contact" class="btn"><span class="dot"></span>Start a Project</a>
-            </div>
-        </div>
-    </section>
+<!-- ================= TOOLS ================= -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 class="sec-title">Creative <em>Toolkit</em></h2>
+    </div>
+    <div>
+      <div class="tool-row">
+        <div class="tool-icon">Pr</div>
+        <div><span class="tag">Video Editing & Sequencing</span><h4>Premiere Pro</h4></div>
+        <p>My primary tool for editing — timeline management, multi-cam sequencing, and precise pacing on every cut.</p>
+      </div>
+      <div class="tool-row">
+        <div class="tool-icon">Ae</div>
+        <div><span class="tag">Motion Graphics & VFX</span><h4>After Effects</h4></div>
+        <p>Where the motion design happens — animated titles, transitions, and visual effects layered into every edit.</p>
+      </div>
+      <div class="tool-row">
+        <div class="tool-icon">C4</div>
+        <div><span class="tag">3D Modeling & Rendering</span><h4>Cinema 4D / Blender</h4></div>
+        <p>Used for building 3D scenes, product renders, and animated models with realistic lighting and materials.</p>
+      </div>
+      <div class="tool-row">
+        <div class="tool-icon">Ai</div>
+        <div><span class="tag">Illustration & Vector Art</span><h4>Illustrator</h4></div>
+        <p>My go-to for illustration and vector work — clean linework and scalable artwork for any format.</p>
+      </div>
+      <div class="tool-row">
+        <div class="tool-icon">Ps</div>
+        <div><span class="tag">Graphic Design & Retouching</span><h4>Photoshop</h4></div>
+        <p>For layered compositing, retouching, and the graphic design work behind every finished frame.</p>
+      </div>
+    </div>
+  </div>
+  <div class="wrap" style="text-align:center;margin-top:56px;">
+    <a href="#contact" class="btn"><span class="dot"></span>Start a Project</a>
+  </div>
+</section>
 
-    <!-- ================= FINAL CTA ================= -->
-    <section class="final" id="contact">
-        <div class="wrap">
+<!-- ================= FAQ ================= -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 class="sec-title">Frequently <em>Asked</em></h2>
+    </div>
+    <div>
+      <div class="faq-item open">
+        <div class="faq-q"><span>What industries do you work with?</span><span class="plus">+</span></div>
+        <div class="faq-a"><p>Mostly brands, creators, and startups — commercials, social content, product launches, and event coverage across fashion, tech, food, and music.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><span>What services do you offer?</span><span class="plus">+</span></div>
+        <div class="faq-a"><p>Video editing, 2D and 3D animation, illustration, and graphic design — either as standalone work or combined into one full visual package.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><span>Can I see more of your previous work?</span><span class="plus">+</span></div>
+        <div class="faq-a"><p>Yes — the selected work section above is a snapshot. Reach out and I'll share a fuller portfolio and reel based on what you need.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><span>How does your process work?</span><span class="plus">+</span></div>
+        <div class="faq-a"><p>We start with a quick call to define the goal and tone, then I move through drafts, revisions, and a final polished delivery — with clear check-ins throughout.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><span>What software do you use?</span><span class="plus">+</span></div>
+        <div class="faq-a"><p>Premiere Pro and After Effects for editing and motion, Cinema 4D / Blender for 3D, and Illustrator and Photoshop for design and illustration.</p></div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:56px;">
+      <a href="#contact" class="btn"><span class="dot"></span>Start a Project</a>
+    </div>
+  </div>
+</section>
 
-            <div class="final-pin" id="finalPin">
-                <div class="final-heading" id="finalHeading">
-                    <h2 class="sec-title">Let's Create <em>Together</em></h2>
-                    <a href="#contact-form" class="btn"><span class="dot"></span>Start a Project</a>
-                </div>
-                <div class="final-photo" id="finalPhoto"><span>MH</span></div>
-            </div>
+<!-- ================= FINAL CTA ================= -->
+<section class="final" id="contact">
+  <div class="wrap">
 
-            <div class="final-copy">
-                <p class="bio">Based in Karachi, I'm a creative video editor and animator driven by storytelling, clean
-                    motion, and purposeful design — blending precision and emotion into every frame.</p>
-                <div class="socials">
-                    <a href="#" target="_blank">Instagram</a>
-                    <a href="#" target="_blank">Behance</a>
-                    <a href="#" target="_blank">YouTube</a>
-                </div>
-                <a href="#" class="btn" style="margin-top:34px;"><span class="dot"></span>Start a Project</a>
-            </div>
+    <div class="final-pin" id="finalPin">
+      <div class="final-heading" id="finalHeading">
+        <h2 class="sec-title">Let's Create <em>Together</em></h2>
+        <a href="#contact-form" class="btn"><span class="dot"></span>Start a Project</a>
+      </div>
+      <div class="final-photo" id="finalPhoto"><span>MH</span></div>
+    </div>
 
-        </div>
-    </section>
+    <div class="final-copy">
+      <p class="bio">Based in Karachi, I'm a creative video editor and animator driven by storytelling, clean motion, and purposeful design — blending precision and emotion into every frame.</p>
+      <div class="socials">
+        <a href="#" target="_blank">Instagram</a>
+        <a href="#" target="_blank">Behance</a>
+        <a href="#" target="_blank">YouTube</a>
+      </div>
+      <a href="#" class="btn" style="margin-top:34px;"><span class="dot"></span>Start a Project</a>
+    </div>
 
-    <footer>
-        <div class="foot-marquee">
-            <span>Mohammad Hassam — Mohammad Hassam — Mohammad Hassam — </span>
-            <span>Mohammad Hassam — Mohammad Hassam — Mohammad Hassam — </span>
-        </div>
-        <div class="foot-bottom">
-            <span>© 2025 Mohammad Hassam</span>
-            <span>Video Editor · Animator · Designer</span>
-        </div>
-    </footer>
+  </div>
+</section>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/lenis@1/dist/lenis.min.js"></script>
+<footer>
+  <div class="foot-marquee">
+    <span>Mohammad Hassam — Mohammad Hassam — Mohammad Hassam — </span>
+    <span>Mohammad Hassam — Mohammad Hassam — Mohammad Hassam — </span>
+  </div>
+  <div class="foot-bottom">
+    <span>© 2025 Mohammad Hassam</span>
+    <span>Video Editor · Animator · Designer</span>
+  </div>
+</footer>
 
-    <script>
-        // live clock
-        function tick() {
-            const el = document.getElementById('clock');
-            const d = new Date();
-            const hh = String(d.getHours()).padStart(2, '0');
-            const mm = String(d.getMinutes()).padStart(2, '0');
-            const ss = String(d.getSeconds()).padStart(2, '0');
-            el.textContent = `LOCAL / ${hh}:${mm}:${ss}`;
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1/dist/lenis.min.js"></script>
+
+<script>
+  // ---- Smooth scroll for the whole page (Lenis), wired into GSAP ScrollTrigger ----
+  let lenis = null;
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (window.Lenis && !prefersReducedMotion) {
+    lenis = new Lenis({
+      duration: 1.1,
+      smoothWheel: true,
+      smoothTouch: false // native touch scroll feels better on phones
+    });
+
+    if (window.gsap && window.ScrollTrigger) {
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+      gsap.ticker.lagSmoothing(0);
+    } else {
+      function raf(time){ lenis.raf(time); requestAnimationFrame(raf); }
+      requestAnimationFrame(raf);
+    }
+  }
+
+  // smooth in-page anchor scrolling — routed through Lenis when available so
+  // it doesn't fight with the page's overall smooth-scroll / pin animations
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{
+    a.addEventListener('click', (e)=>{
+      const id = a.getAttribute('href');
+      const target = id.length > 1 ? document.querySelector(id) : null;
+      if(target){
+        e.preventDefault();
+        if (lenis) { lenis.scrollTo(target, { offset: 0 }); }
+        else { target.scrollIntoView({ behavior:'smooth', block:'start' }); }
+      }
+    });
+  });
+
+  // faq accordion
+  document.querySelectorAll('.faq-item').forEach(item=>{
+    item.querySelector('.faq-q').addEventListener('click', ()=>{
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+      if(!isOpen) item.classList.add('open');
+    });
+  });
+
+  // ---- About: pinned GSAP ScrollTrigger reveal ----
+  // Photo rises up over the "More About Hassam" heading and the heading
+  // fades away behind it as the section stays pinned; the pin only
+  // releases once this reveal animation has fully finished.
+  if (window.gsap && window.ScrollTrigger) {
+    gsap.registerPlugin(ScrollTrigger);
+
+    const mm = gsap.matchMedia();
+
+    mm.add("(min-width: 700px)", () => {
+      // ---- About section ----
+      gsap.set("#aboutPhoto", { y: 90, scale: 0.88 });
+      gsap.set("#aboutHeading", { opacity: 1 });
+
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: "#about",
+          start: "top top",
+          end: "+=160%",
+          scrub: 0.7,
+          pin: true,
+          anticipatePin: 1
         }
-        tick(); setInterval(tick, 1000);
+      })
+        .to("#aboutPhoto", { y: -290, scale: 1, ease: "none" }, 0)
+        .to("#aboutHeading", { opacity: 0, y: -30, ease: "none" }, 0.08);
 
-        // ---- Smooth scroll for the whole page (Lenis), wired into GSAP ScrollTrigger ----
-        let lenis = null;
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      // ---- Final "Let's Create Together" section ----
+      gsap.set("#finalPhoto", { y: 90, scale: 0.88 });
+      gsap.set("#finalHeading", { opacity: 1 });
 
-        if (window.Lenis && !prefersReducedMotion) {
-            lenis = new Lenis({
-                duration: 1.1,
-                smoothWheel: true,
-                smoothTouch: false // native touch scroll feels better on phones
-            });
-
-            if (window.gsap && window.ScrollTrigger) {
-                lenis.on('scroll', ScrollTrigger.update);
-                gsap.ticker.add((time) => { lenis.raf(time * 1000); });
-                gsap.ticker.lagSmoothing(0);
-            } else {
-                function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
-                requestAnimationFrame(raf);
-            }
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: "#contact",
+          start: "top top",
+          end: "+=160%",
+          scrub: 0.7,
+          pin: true,
+          anticipatePin: 1
         }
+      })
+        .to("#finalPhoto", { y: -290, scale: 1, ease: "none" }, 0)
+        .to("#finalHeading", { opacity: 0, y: -30, ease: "none" }, 0.08);
+    });
 
-        // smooth in-page anchor scrolling — routed through Lenis when available so
-        // it doesn't fight with the page's overall smooth-scroll / pin animations
-        document.querySelectorAll('a[href^="#"]').forEach(a => {
-            a.addEventListener('click', (e) => {
-                const id = a.getAttribute('href');
-                const target = id.length > 1 ? document.querySelector(id) : null;
-                if (target) {
-                    e.preventDefault();
-                    if (lenis) { lenis.scrollTo(target, { offset: 0 }); }
-                    else { target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
-                }
-            });
-        });
+    mm.add("(max-width: 699px)", () => {
+      // lighter, non-pinned version on small screens
+      gsap.set("#aboutPhoto", { y: 30 });
+      gsap.to("#aboutPhoto", {
+        y: -70,
+        scrollTrigger: { trigger: "#about", start: "top 80%", end: "top 20%", scrub: 0.6 }
+      });
+      gsap.to("#aboutHeading", {
+        opacity: 0.15,
+        scrollTrigger: { trigger: "#about", start: "top 70%", end: "top 25%", scrub: 0.6 }
+      });
 
-        // faq accordion
-        document.querySelectorAll('.faq-item').forEach(item => {
-            item.querySelector('.faq-q').addEventListener('click', () => {
-                const isOpen = item.classList.contains('open');
-                document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
-                if (!isOpen) item.classList.add('open');
-            });
-        });
-
-        // ---- About: pinned GSAP ScrollTrigger reveal ----
-        // Photo rises up over the "More About Hassam" heading and the heading
-        // fades away behind it as the section stays pinned; the pin only
-        // releases once this reveal animation has fully finished.
-        if (window.gsap && window.ScrollTrigger) {
-            gsap.registerPlugin(ScrollTrigger);
-
-            const mm = gsap.matchMedia();
-
-            mm.add("(min-width: 700px)", () => {
-                // ---- About section ----
-                gsap.set("#aboutPhoto", { y: 90, scale: 0.88 });
-                gsap.set("#aboutHeading", { opacity: 1 });
-
-                gsap.timeline({
-                    scrollTrigger: {
-                        trigger: "#about",
-                        start: "top top",
-                        end: "+=160%",
-                        scrub: 0.7,
-                        pin: true,
-                        anticipatePin: 1
-                    }
-                })
-                    .to("#aboutPhoto", { y: -290, scale: 1, ease: "none" }, 0)
-                    .to("#aboutHeading", { opacity: 0, y: -30, ease: "none" }, 0.08);
-
-                // ---- Final "Let's Create Together" section ----
-                gsap.set("#finalPhoto", { y: 90, scale: 0.88 });
-                gsap.set("#finalHeading", { opacity: 1 });
-
-                gsap.timeline({
-                    scrollTrigger: {
-                        trigger: "#contact",
-                        start: "top top",
-                        end: "+=160%",
-                        scrub: 0.7,
-                        pin: true,
-                        anticipatePin: 1
-                    }
-                })
-                    .to("#finalPhoto", { y: -290, scale: 1, ease: "none" }, 0)
-                    .to("#finalHeading", { opacity: 0, y: -30, ease: "none" }, 0.08);
-            });
-
-            mm.add("(max-width: 699px)", () => {
-                // lighter, non-pinned version on small screens
-                gsap.set("#aboutPhoto", { y: 30 });
-                gsap.to("#aboutPhoto", {
-                    y: -70,
-                    scrollTrigger: { trigger: "#about", start: "top 80%", end: "top 20%", scrub: 0.6 }
-                });
-                gsap.to("#aboutHeading", {
-                    opacity: 0.15,
-                    scrollTrigger: { trigger: "#about", start: "top 70%", end: "top 25%", scrub: 0.6 }
-                });
-
-                gsap.set("#finalPhoto", { y: 30 });
-                gsap.to("#finalPhoto", {
-                    y: -70,
-                    scrollTrigger: { trigger: "#contact", start: "top 80%", end: "top 20%", scrub: 0.6 }
-                });
-                gsap.to("#finalHeading", {
-                    opacity: 0.15,
-                    scrollTrigger: { trigger: "#contact", start: "top 70%", end: "top 25%", scrub: 0.6 }
-                });
-            });
-        }
-    </script>
+      gsap.set("#finalPhoto", { y: 30 });
+      gsap.to("#finalPhoto", {
+        y: -70,
+        scrollTrigger: { trigger: "#contact", start: "top 80%", end: "top 20%", scrub: 0.6 }
+      });
+      gsap.to("#finalHeading", {
+        opacity: 0.15,
+        scrollTrigger: { trigger: "#contact", start: "top 70%", end: "top 25%", scrub: 0.6 }
+      });
+    });
+  }
+</script>
 
 </body>
-
 </html>
